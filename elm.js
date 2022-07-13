@@ -10233,7 +10233,7 @@ Elm.Todo.make = function (_elm) {
    };
    var myHeader = A2($Html.h1,
    _L.fromArray([]),
-   _L.fromArray([$Html.text("Pricefly")]));
+   _L.fromArray([$Html.text("Dynamic Pricing")]));
    var saleToRow = function (sale) {
       return A2($Html.tr,
       _L.fromArray([]),
@@ -10257,7 +10257,7 @@ Elm.Todo.make = function (_elm) {
       _L.fromArray([$Html$Attributes.$class("tableSection")]),
       _L.fromArray([A2($Html.caption,
                    _L.fromArray([]),
-                   _L.fromArray([$Html.text("Ticket Sales")]))
+                   _L.fromArray([$Html.text("Sales")]))
                    ,A2($Html.thead,
                    _L.fromArray([]),
                    _L.fromArray([A2($Html.tr,
@@ -10287,7 +10287,7 @@ Elm.Todo.make = function (_elm) {
                    ,A2($Html.p,
                    _L.fromArray([]),
                    _L.fromArray([$Html.text(A2($Basics._op["++"],
-                   "Tickets Remaining: ",
+                   "Stocks Remaining: ",
                    $Basics.toString(model.tickets - model.sales)))]))
                    ,A2($Html.p,
                    _L.fromArray([]),
@@ -10435,7 +10435,7 @@ Elm.Todo.make = function (_elm) {
                    model.maxS)
                    ,A2($Html.label,
                    _L.fromArray([]),
-                   _L.fromArray([$Html.text("Tickets")]))
+                   _L.fromArray([$Html.text("Stocks")]))
                    ,A2(inputCreator,
                    "Tickets",
                    model.ticketsS)
