@@ -10333,7 +10333,7 @@ Elm.Todo.make = function (_elm) {
       return canPurchase(model) ? "purchase-button" : "no-purchase";
    };
    var purchaseTxt = function (model) {
-      return canPurchase(model) ? "Purchase" : "Sale Over";
+      return canPurchase(model) ? "Purchase" : "Show Graph";
    };
    var toNumber = F2(function (str,
    $default) {
@@ -10493,7 +10493,12 @@ Elm.Todo.make = function (_elm) {
                                 model)
                                 ,A2($Html$Lazy.lazy,
                                 salesTable,
-                                model)]))]));
+                                model)]))
+                   ,A2($Html.canvas,
+                    _L.fromArray([$Html$Attributes.$class("myChart"), $Html$Attributes.id("myChart")]),
+                    _L.fromArray([]))
+                    
+                ]));
    };
    var actionSig = A2($Signal.map,
    Clicky,
@@ -10528,23 +10533,56 @@ Elm.Todo.make = function (_elm) {
       return function () {
          switch (action.ctor)
          {case "MakePurchase":
-            return canPurchase(model) ? _U.replace([["sales"
-                                                    ,model.sales + 1]
-                                                   ,["revenue"
-                                                    ,model.revenue + model.price]
-                                                   ,["saleList"
-                                                    ,A2($List._op["::"],
-                                                    A2(newSale,
-                                                    model.price,
-                                                    model.timeLeft),
-                                                    model.saleList)]
-                                                   ,["price"
-                                                    ,priceTickets(_U.replace([["sales"
-                                                                              ,model.sales + 1]],
-                                                    model))]],
-              model) : model;
+            if(canPurchase(model)){
+                if(chartList[model.price] == undefined){
+                    chartList[model.price] = 1; 
+                }else{
+                    chartList[model.price] = chartList[model.price] + 1; 
+                }
+
+                return _U.replace([["sales"
+                            ,model.sales + 1]
+                        ,["revenue"
+                            ,model.revenue + model.price]
+                        ,["saleList"
+                            ,A2($List._op["::"],
+                            A2(newSale,
+                            model.price,
+                            model.timeLeft),
+                            model.saleList)]
+                        ,["price"
+                            ,priceTickets(_U.replace([["sales"
+                                                    ,model.sales + 1]],
+                            model))]],
+                model)
+            }else{
+                createChart();
+                return model
+            }
+            
+            // return canPurchase(model) ? _U.replace([["sales"
+            //                                         ,model.sales + 1]
+            //                                        ,["revenue"
+            //                                         ,model.revenue + model.price]
+            //                                        ,["saleList"
+            //                                         ,A2($List._op["::"],
+            //                                         A2(newSale,
+            //                                         model.price,
+            //                                         model.timeLeft),
+            //                                         model.saleList)]
+            //                                        ,["price"
+            //                                         ,priceTickets(_U.replace([["sales"
+            //                                                                   ,model.sales + 1]],
+            //                                         model))]],
+            //   model) : model;
             case "NoOp": return model;
             case "Reset":
+                chartList = [];
+                const globalId = document.getElementById('global');
+                const myChartId = document.getElementById('myChart');
+                // document.getElementById("demo").removeChild;
+                myChartId.remove()
+                console.log('reset')
             return A2(mergeModels,
               model,
               emptyModel);
@@ -10755,3 +10793,32 @@ Elm.Window.make = function (_elm) {
                         ,height: height};
    return _elm.Window.values;
 };
+
+
+// chart
+let chartList = {};
+
+function createChart () {
+    const myChart = document.getElementById('myChart');
+    var yValues = ['', ...Object.values(chartList)];
+    var xValues = ['',...Object.keys(chartList)];
+    var barColors = "black";
+
+console.log(yValues)
+new Chart(myChart, {
+  type: "bar",
+  data: {
+    labels: xValues,
+    datasets: [{
+      backgroundColor: barColors,
+      data: yValues
+    }]
+  },
+  options: {
+    legend: {display: false},
+    title: {
+      display: false,
+    }
+  }
+});
+}
